@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Setup ESP8266</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      html, body, .content, .main {height: 100%;}
+      body {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #333;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      footer {color: #888;}
+      form {
+        display: block;
+        margin-top: 0em;
+      }
+      button, input, optgroup, select, textarea {margin: 0px;}
+      label {
+        display: inline-block;
+        max-width: 100%;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+      .content {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+      .main {flex: 1;}
+      @media (min-width: 768px)
+      .form-inline .form-control {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+      }
+      .form-group {margin-bottom: 15px;}
+      .form-control {
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      }
+      .form-control:focus {
+        border-color: #66afe9;
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+      }
+      .label-lg {
+        font-size: 18px;
+        line-height: 1.3333333;
+      }
+      .input-lg {
+        height: 46px;
+        padding: 10px 16px;
+        font-size: 18px;
+        line-height: 1.3333333;
+        border-radius: 6px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+      }
+      .btn-block {
+        display: block;
+        width: 100%;
+      }
+      .btn-group-lg>.btn, .btn-lg {
+        padding: 10px 16px;
+        font-size: 18px;
+        line-height: 1.3333333;
+        border-radius: 6px;
+      }
+      .btn-default {
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+      }
+      .btn-primary {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #2e6da4;
+      }
+      .verticalCenter {
+        display: flex;
+        /*height: 50%;*/
+        align-items: center;
+        justify-content: center;
+      }
+      #passwordGroup, #networkGroup {
+        opacity: 1;
+        transition: opacity 0.25s linear;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div class="main">
+        <h1 class="title">ESP8266 NodeMCU Setup</h1>
+        <div class="verticalCenter">
+          <form action="" method="POST">
+            <div class="form-group">
+              <label class="label-lg" for="bootDelay">Boot Delay (in sec)</label>
+              <input type="number" value=3 min=1 max=10 class="form-control input-lg" name="bootDelay" placeholder="Boot Delay (in sec)">
+            </div>
+            <div class="form-group">
+              <label class="label-lg" for="wifiMode">WiFi Mode</label>
+              <select class="form-control input-lg" name="wifiMode" id="wifiMode">
+                <option class="input-lg">wifi.STATIONAP</option>
+                <option class="input-lg">wifi.SOFTAP</option>
+                <option class="input-lg">wifi.STATION</option>
+                <option class="input-lg">None</option>
+              </select>
+            </div>
+            <div id="networkGroup">
+              <div class="form-group">
+                <label class="label-lg" for="networkName">Network</label><!-- {{networks}} -->
+                <select class="form-control input-lg" name="ssid" id="networkName">
+                  <option value disabled selected> --- make a selection --- </option>
+                </select>
+              </div>
+              <div class="form-group" id="passwordGroup">
+                <label class="label-lg" for="password">Password</label>
+                <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Password">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="label-lg" for="bootFile">Boot File</label><!-- {{files}} -->
+              <select class="form-control input-lg" name="bootFile" id="bootFile">
+                <option value disabled selected> --- make a selection --- </option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
+          </form>
+        </div>
+      </div>
+      <footer>
+        Served from ESP8266 (node.heap() = <span id="heap">0</span> )
+      </footer>
+    </div>
+
+    <script type="text/javascript">
+      var networkSelectElem = document.getElementById("networkName");
+      var wifiModeSelectElem = document.getElementById("wifiMode");
+      var bootFileSelectElem = document.getElementById("bootFile");
+      var heapSpanElem = document.getElementById("heap");
+
+      function changeEventHandler(event) {
+        var pwdInputElem = document.getElementById("passwordGroup");
+        var networkAuthMode = this.options[this.selectedIndex].dataset.authmode;
+        if (networkAuthMode !== "0") {
+          pwdInputElem.style.opacity = 1;
+        } else {
+          pwdInputElem.style.opacity = 0;
+        }
+      }
+      function changeWifiModeEventHandler(event) {
+        var networkGroup = document.getElementById("networkGroup");
+        var networkMode = this.options[this.selectedIndex].value;
+        if ((networkMode == "None") || (networkMode == "wifi.SOFTAP")) {
+          networkGroup.style.opacity = 0;
+        } else {
+          networkGroup.style.opacity = 1;
+        }
+      }
+
+      networkSelectElem.addEventListener("change", changeEventHandler);
+      wifiModeSelectElem.addEventListener("change", changeWifiModeEventHandler);
+
+      fetch("/files")
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(files) {
+          for (var name in files) {
+            var opt = document.createElement("option");
+            opt.value = name;
+            opt.text = name;
+            bootFileSelectElem.add(opt);
+          }
+        });
+
+      fetch("/heap")
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(heap) {
+          heapSpanElem.textContent = heap["heap"]
+        });
+
+      fetch("/networks")
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(networks) {
+          for (var name in networks) {
+            var opt = document.createElement("option");
+            opt.value = name;
+            if (networks[name]["authmode"] === "0") {
+              opt.text = name + "(" + "\uD83D\uDD13" + ")"; // unsecured
+            } else {
+              opt.text = name + "(" + "\uD83D\uDD10" + ")"; // secured
+            }
+            networkSelectElem.add(opt);
+          }
+        });
+    </script>
+  </body>
+</html>
