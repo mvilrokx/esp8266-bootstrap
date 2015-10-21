@@ -10,7 +10,7 @@
         margin: 0;
         box-sizing: border-box;
       }
-      html, body, .content, .main {height: 100%;}
+      html, body {height: 100%;}
       body {
         font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         font-size: 14px;
@@ -18,8 +18,8 @@
         color: #333;
         background-color: #fff;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
       }
       footer {color: #888;}
       form {
@@ -33,12 +33,18 @@
         margin-bottom: 5px;
         font-weight: 700;
       }
-      .content {
+      /* Sticky Footer: https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/ */
+      section {
+        flex: 1 0 auto;
+      }
+
+/*      .content {
         display: flex;
         min-height: 100vh;
         flex-direction: column;
       }
       .main {flex: 1;}
+*/
       @media (min-width: 768px)
       .form-inline .form-control {
         display: inline-block;
@@ -124,61 +130,62 @@
       }
       .verticalCenter {
         display: flex;
-        /*height: 50%;*/
+        flex-direction: column;
         align-items: center;
         justify-content: center;
       }
-      #passwordGroup, #networkGroup {
+        #passwordGroup, #networkGroup {
         opacity: 1;
         transition: opacity 0.25s linear;
       }
     </style>
   </head>
   <body>
-    <div class="content">
-      <div class="main">
-        <h1 class="title">ESP8266 NodeMCU Setup</h1>
-        <div class="verticalCenter">
-          <form action="" method="POST">
-            <div class="form-group">
-              <label class="label-lg" for="bootDelay">Boot Delay (in sec)</label>
-              <input type="number" value=3 min=1 max=10 class="form-control input-lg" name="bootDelay" placeholder="Boot Delay (in sec)">
-            </div>
-            <div class="form-group">
-              <label class="label-lg" for="wifiMode">WiFi Mode</label>
-              <select class="form-control input-lg" name="wifiMode" id="wifiMode">
-                <option class="input-lg">wifi.STATIONAP</option>
-                <option class="input-lg">wifi.SOFTAP</option>
-                <option class="input-lg">wifi.STATION</option>
-                <option class="input-lg">None</option>
-              </select>
-            </div>
-            <div id="networkGroup">
-              <div class="form-group">
-                <label class="label-lg" for="networkName">Network</label><!-- {{networks}} -->
-                <select class="form-control input-lg" name="ssid" id="networkName">
-                  <option value disabled selected> --- make a selection --- </option>
-                </select>
-              </div>
-              <div class="form-group" id="passwordGroup">
-                <label class="label-lg" for="password">Password</label>
-                <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Password">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="label-lg" for="bootFile">Boot File</label><!-- {{files}} -->
-              <select class="form-control input-lg" name="bootFile" id="bootFile">
-                <option value disabled selected> --- make a selection --- </option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
-          </form>
+
+    <header>
+      <h1 class="title">ESP8266 NodeMCU Setup</h1>
+    </header>
+
+    <section class="verticalCenter">
+      <form action="" method="POST">
+        <div class="form-group">
+          <label class="label-lg" for="bootDelay">Boot Delay (in sec)</label>
+          <input type="number" value=3 min=1 max=10 class="form-control input-lg" name="bootDelay" placeholder="Boot Delay (in sec)">
         </div>
-      </div>
-      <footer>
-        Served from ESP8266 (node.heap() = <span id="heap">0</span> )
-      </footer>
-    </div>
+        <div class="form-group">
+          <label class="label-lg" for="wifiMode">WiFi Mode</label>
+          <select class="form-control input-lg" name="wifiMode" id="wifiMode">
+            <option class="input-lg" value=3>wifi.STATIONAP</option>
+            <option class="input-lg" value=2>wifi.SOFTAP</option>
+            <option class="input-lg" value=1>wifi.STATION</option>
+            <option class="input-lg" value=0>None</option>
+          </select>
+        </div>
+        <div id="networkGroup">
+          <div class="form-group">
+            <label class="label-lg" for="networkName">Network</label><!-- {{networks}} -->
+            <select class="form-control input-lg" name="networkName" id="networkName">
+              <option value disabled selected> --- make a selection --- </option>
+            </select>
+          </div>
+          <div class="form-group" id="passwordGroup">
+            <label class="label-lg" for="password">Password</label>
+            <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Password">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="label-lg" for="bootFile">Boot File</label><!-- {{files}} -->
+          <select class="form-control input-lg" name="bootFile" id="bootFile">
+            <option value disabled selected> --- make a selection --- </option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
+      </form>
+    </section>
+
+    <footer>
+      Served from ESP8266 (node.heap() = <span id="heap">0</span> )
+    </footer>
 
     <script type="text/javascript">
       var networkSelectElem = document.getElementById("networkName");
@@ -198,7 +205,7 @@
       function changeWifiModeEventHandler(event) {
         var networkGroup = document.getElementById("networkGroup");
         var networkMode = this.options[this.selectedIndex].value;
-        if ((networkMode == "None") || (networkMode == "wifi.SOFTAP")) {
+        if ((networkMode == 0) || (networkMode == 2)) {
           networkGroup.style.opacity = 0;
         } else {
           networkGroup.style.opacity = 1;

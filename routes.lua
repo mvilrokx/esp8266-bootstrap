@@ -9,8 +9,14 @@ routes = {
     POST = function(params)
       file.open("config.lua", "w+")
       for k, v in pairs(params) do
-        -- print(k .. ' : ' .. v)
-        file.writeline(k .. " = '" .. v .. "'")
+        print(k .. ' : ' .. v)
+        if v ~= nil then
+          if tonumber(v) ~= nil then
+            file.writeline(k .. " = " .. tonumber(v))
+          else
+            file.writeline(k .. " = '" .. v .. "'")
+          end
+        end
       end
       file.close()
       return {

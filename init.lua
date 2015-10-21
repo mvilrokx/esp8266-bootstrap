@@ -34,7 +34,9 @@ if file.open("config.lua") then
   s, err = pcall(function() dofile("config.lua") end)
 end
 
-wifi.setmode(wifiMode)
+if wifiMode > 0 then
+  wifi.setmode(wifiMode)
+end
 
 tmr.alarm(bootAlarmId, 1000, 1, function()
   print(bootDelay)
