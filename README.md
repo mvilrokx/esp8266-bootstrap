@@ -65,3 +65,19 @@ The first time it gets called is when the header is sent (which is why that part
 This file contains the routes of the config application.  You can add your own routes if you want.  You add an entry for your path (e.g. /home) and HTTP verb (e.g. POST) within that path.  You assign a function to that entry, which is what will get called if that path and that HTTP verb are being requested by the client from the server.  The function MUST return a LUA table that contains a header key which has as value a valid HTTP Header.  It can also contain a body key with either a file name or a data field that contains JSON data to be send back to the client.
 
 If you remove the entries already present, the config app will stop working so please only add new routes.
+
+## Compile
+Once all the files are uploaded to your ESP chip, you need to compile the .lua files to .lc files.  Please use the following script to do this:
+
+    for k, v in pairs(file.list()) do
+        if k ~= "init.lua" and k ~= "config.lua" then
+            if string.match(k, "%.lua$") then
+               print("Compiling " .. k)
+                node.compile(k)
+                file.remove(k)
+            else
+                print("Skipping " .. k)
+            end
+        end
+    end
+
